@@ -32,6 +32,6 @@ struct Message
     i32 code;
     i16 opcode;
     i32 account;
-    Common::ByteBuffer packet;
+    ByteBuffer packet;
 	std::string* message;
 };

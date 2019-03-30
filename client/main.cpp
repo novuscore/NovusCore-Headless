@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <asio.hpp>
 
+#include "Connection/NovusConnection.h"
 #include "Config/ConfigHandler.h"
 #include "Utils/DebugHandler.h"
 
@@ -17,7 +18,6 @@ std::string GetLineFromCin()
     return line;
 }
 
-
 i32 main()
 {
     /* Load Config Handler for server */
@@ -26,18 +26,22 @@ i32 main()
         std::getchar();
         return 0;
     }
+    std::string username = "ADMIN";
 
     ClientHandler clientHandler(ConfigHandler::GetOption<f32>("tickRate", 30));
     clientHandler.Start();
 
-    asio::io_service io_service(2);
-    
+    asio::io_service io_service(2);    
+    NovusConnection novusConnection(new asio::ip::tcp::socket(io_service), ConfigHandler::GetOption<std::string>("address", "127.0.0.1"), ConfigHandler::GetOption<u16>("port", 3724));
+    novusConnection.Start(username);
 
     srand((u32)time(NULL));
     std::thread run_thread([&]
     {
         io_service.run();
-    });
+    });    
+
+    NC_LOG_MESSAGE("Client established connection to Authserver.");
 
     ConsoleCommandHandler consoleCommandHandler;
     bool futureAvailable = true;

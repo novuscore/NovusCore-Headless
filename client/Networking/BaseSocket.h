@@ -36,7 +36,6 @@ namespace Common
     class BaseSocket : public std::enable_shared_from_this<BaseSocket>
     {
     public:
-        virtual bool Start() = 0;
         virtual void Close(asio::error_code error) { _socket->close(); _isClosed = true; std::cout << "Closed: " << error.message().c_str() << std::endl; }
         virtual void HandleRead() = 0;
 
@@ -86,12 +85,8 @@ namespace Common
         }        
         void HandleInternalWrite(asio::error_code error, std::size_t transferedBytes)
         {
-            if (!error)
+            if (error)
             {
-            }
-            else
-            {
-                //printf("WRITE ERROR\n");
                 Close(error);
             }
         }
