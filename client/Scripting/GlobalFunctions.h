@@ -21,7 +21,7 @@ namespace GlobalFunctions
 void RegisterGlobalFunctions(AngelBinder::Engine* engine)
 {
 	// Register*Callback functions need to be registered manually since the binder does not support it
-	engine->asEngine()->RegisterFuncdef("void PacketCallback(int)");
+	engine->asEngine()->RegisterFuncdef("void PacketCallback(string, uint8)");
 	engine->asEngine()->RegisterGlobalFunction("void RegisterPacketCallback(uint32 id, PacketCallback @cb)", asFUNCTION(GlobalFunctions::RegisterPacketCallback), asCALL_CDECL);
 
 	AngelBinder::Exporter::Export(*engine)

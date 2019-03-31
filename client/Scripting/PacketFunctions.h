@@ -12,8 +12,9 @@ namespace PacketFunctions
 	{
 		NC_LOG_MESSAGE("Send login!");
 		
-		NovusConnection novusConnection(new asio::ip::tcp::socket(*ScriptEngine::GetIOService()), ConfigHandler::GetOption<std::string>("address", "127.0.0.1"), ConfigHandler::GetOption<u16>("port", 3724));
-		novusConnection.Start(username, password);
+		NovusConnection* connection = new NovusConnection(new asio::ip::tcp::socket(*ScriptEngine::GetIOService()), ConfigHandler::GetOption<std::string>("address", "127.0.0.1"), ConfigHandler::GetOption<u16>("port", 3724));
+		connection->Start(username, password);
+		ScriptEngine::RegisterNovusConnection(connection);
 	}
 
 	inline void HelloWorld()

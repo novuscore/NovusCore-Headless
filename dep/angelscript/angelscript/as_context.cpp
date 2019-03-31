@@ -425,13 +425,14 @@ int asCContext::Prepare(asIScriptFunction *func)
 		asASSERT( m_engine );
 
 		// Make sure the function is from the same engine as the context to avoid mixups
-		if( m_engine != func->GetEngine() )
+		// NovusCore Pursche: We actually want to run our _STATELESS_ AngelScripts regardless of what context we use, so let's disable this
+		/*if( m_engine != func->GetEngine() )
 		{
 			asCString str;
 			str.Format(TXT_FAILED_IN_FUNC_s_WITH_s_s_d, "Prepare", func->GetDeclaration(true, true), errorNames[-asINVALID_ARG], asINVALID_ARG);
 			m_engine->WriteMessage("", 0, 0, asMSGTYPE_ERROR, str.AddressOf());
 			return asINVALID_ARG;
-		}
+		}*/
 
 		if( m_initialFunction )
 		{

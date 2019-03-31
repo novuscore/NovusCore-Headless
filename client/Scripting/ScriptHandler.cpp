@@ -16,6 +16,9 @@
 #include "GlobalFunctions.h"
 #include "PacketFunctions.h"
 
+// NovusCore hooks
+#include "PacketHooks.h"
+
 namespace fs = std::filesystem;
 
 std::string ScriptHandler::_path = "";
@@ -24,6 +27,8 @@ asio::io_service* ScriptHandler::_ioService = nullptr;
 void ScriptHandler::ReloadScripts()
 {
 	NC_LOG_MESSAGE("Reloading scripts...");
+	PacketHooks::ClearHooks();
+
 	if (_path != "")
 	{
 		LoadScriptDirectory(_path);

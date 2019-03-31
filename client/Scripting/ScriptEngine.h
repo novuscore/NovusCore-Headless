@@ -1,12 +1,14 @@
 #pragma once
 #include <functional>
 #include <memory>
+#include <vector>
 #include "../Utils/SharedPool.h"
 #include "AngelBinder.h"
 #include <asio.hpp>
 
 typedef void (func_t)(AngelBinder::Engine*);
 
+class NovusConnection;
 class ScriptEngine
 {
 public:
@@ -17,6 +19,8 @@ public:
 	static AngelBinder::Context* GetScriptContext();
 	static asio::io_service* GetIOService() { return _ioService; }
 	static void SetIOService(asio::io_service* service) { _ioService = service; }
+
+	static void RegisterNovusConnection(NovusConnection* connection);
 private:
 
 private:
@@ -25,4 +29,5 @@ private:
 	//static std::function<void(AngelBinder::Engine*)> const& _registerFunction;
 	static func_t* _registerFunction;
 	static asio::io_service* _ioService;
+	static std::vector<NovusConnection*> _novusConnections;
 };

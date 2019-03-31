@@ -3,6 +3,7 @@
 
 thread_local AngelBinder::Engine* ScriptEngine::_scriptEngine = nullptr;
 asio::io_service* ScriptEngine::_ioService = nullptr;
+std::vector<NovusConnection*> ScriptEngine::_novusConnections;
 
 void Placeholder(AngelBinder::Engine* engine) {}
 func_t* ScriptEngine::_registerFunction = nullptr;
@@ -26,5 +27,10 @@ AngelBinder::Engine* ScriptEngine::GetScriptEngine()
 
 AngelBinder::Context* ScriptEngine::GetScriptContext()
 {
-	return _scriptEngine->getContext();
+	return GetScriptEngine()->getContext();
+}
+
+void ScriptEngine::RegisterNovusConnection(NovusConnection* connection)
+{
+	_novusConnections.push_back(connection);
 }

@@ -112,7 +112,7 @@ void NovusConnection::HandleRead()
                 sAuthLogonChallengeHeader challengeHeader;
                 challengeHeader.Read(byteBuffer);
 
-				PacketHooks::CallHook(PacketHooks::HOOK_ONLOGIN_CHALLENGE, challengeHeader.result, 32);
+				PacketHooks::CallHook(PacketHooks::HOOK_ONLOGIN_CHALLENGE, _username, challengeHeader.result);
 
                 NC_LOG_ERROR("Login Failed: (%u, %u, %u)", (u32)challengeHeader.command, (u32)challengeHeader.error, (u32)challengeHeader.result);
 
@@ -159,7 +159,7 @@ bool NovusConnection::HandleCommandChallenge()
     _status = NOVUSSTATUS_PROOF;
     sAuthLogonChallengeData* logonChallenge = reinterpret_cast<sAuthLogonChallengeData*>(GetByteBuffer().GetReadPointer());
     
-	PacketHooks::CallHook(PacketHooks::HOOK_ONLOGIN_CHALLENGE, logonChallenge->result, 32);
+	PacketHooks::CallHook(PacketHooks::HOOK_ONLOGIN_CHALLENGE, _username, logonChallenge->result);
 
     BigNumber N, A, B, a, u, x, S, salt, version_challenge, g(logonChallenge->g), k(3);
     B.Bin2BN(logonChallenge->b, 32);
