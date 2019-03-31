@@ -30,12 +30,13 @@ i32 main()
     ClientHandler clientHandler(ConfigHandler::GetOption<f32>("tickRate", 30));
 
 	asio::io_service io_service(2);
-
     srand((u32)time(NULL));
+
     std::thread run_thread([&]
     {
+        auto work = std::make_shared<asio::io_service::work>(io_service);
         io_service.run();
-    });    
+    });
 
 	clientHandler.SetIOService(&io_service);
 	clientHandler.Start();
