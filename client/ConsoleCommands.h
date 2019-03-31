@@ -6,19 +6,12 @@
 #include <iterator>
 #include <functional>
 
-#include "Utils/StringHash.h"
+#include "Utils/StringUtils.h"
 #include "Utils/DebugHandler.h"
 
 #include "ConsoleCommands/QuitCommand.h"
 #include "ConsoleCommands/PingCommand.h"
-
-std::vector<std::string> SplitString(std::string string)
-{
-	std::istringstream iss(string);
-	std::vector<std::string> results(std::istream_iterator<std::string>{iss},
-		std::istream_iterator<std::string>());
-	return results;
-}
+#include "ConsoleCommands/ReloadCommand.h"
 
 class ConsoleCommandHandler
 {
@@ -27,6 +20,7 @@ public:
 	{
 		RegisterCommand("quit"_h, &QuitCommand);
 		RegisterCommand("ping"_h, &PingCommand);
+		RegisterCommand("reload"_h, &ReloadCommand);
 	}
 
 	void HandleCommand(ClientHandler& clientHandler, std::string& command)
@@ -34,8 +28,8 @@ public:
 		if (command.size() == 0)
 			return;
 
-		std::vector<std::string> splitCommand = SplitString(command);
-		u32 hashedCommand = detail::fnv1a_32(splitCommand[0].c_str(), splitCommand[0].size());
+		std::vector<std::string> splitCommand = StringUtils::SplitString(command);
+		u32 hashedCommand = StringUtils::fnv1a_32(splitCommand[0].c_str(), splitCommand[0].size());
 
 		auto commandHandler = commandHandlers.find(hashedCommand);
 		if (commandHandler != commandHandlers.end())

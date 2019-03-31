@@ -2,6 +2,7 @@
 
 #include <stack>
 #include <mutex>
+#include <assert.h>
 
 template <class T>
 class SharedPool

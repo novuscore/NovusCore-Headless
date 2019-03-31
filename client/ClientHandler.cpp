@@ -2,6 +2,8 @@
 #include "NovusTypes.h"
 #include "Utils/Timer.h"
 #include "Networking/Opcode/Opcode.h"
+#include "Config\ConfigHandler.h"
+#include "Scripting/ScriptHandler.h"
 
 #include <thread>
 #include <iostream>
@@ -49,6 +51,10 @@ void ClientHandler::Stop()
 
 void ClientHandler::Run()
 {
+	std::string scriptDirectory = ConfigHandler::GetOption<std::string>("path", "scripts");
+	ScriptHandler::SetIOService(_ioService);
+	ScriptHandler::LoadScriptDirectory(scriptDirectory);
+
     Timer timer;
     while (true)
     {
@@ -97,6 +103,11 @@ bool ClientHandler::Update()
             pongMessage.message = new std::string("PONG!");
             _outputQueue.enqueue(pongMessage);
         }
+
+		if (message.code == MSG_IN_RELOAD_SCRIPTS)
+		{
+			ScriptHandler::ReloadScripts();
+		}
     }
 
     return true;

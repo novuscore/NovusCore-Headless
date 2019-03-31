@@ -23,3 +23,4 @@
 add_subdirectory(asio)
 add_subdirectory(openssl)
 add_subdirectory(zlib)
+add_subdirectory(angelscript)

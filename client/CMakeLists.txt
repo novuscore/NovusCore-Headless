@@ -29,15 +29,19 @@ set(CLIENT_DEPENDENCIES
     "Dependencies/robin-hood-hashing"
     "${ZLIB_INCLUDE_DIRS}"
     "${CMAKE_SOURCE_DIR}/dep/asio"
+    "${CMAKE_SOURCE_DIR}/dep/angelscript/include"
 )
 
 add_executable(client ${CLIENT_FILES})
+set_property(TARGET client PROPERTY CXX_STANDARD 17)
 find_assign_files(${CLIENT_FILES})
 
 # Set VERSION & FOLDER Property
 set_target_properties(client PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(client PROPERTIES FOLDER "server")
 
+add_compile_definitions(NOMINMAX _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
+
 target_include_directories(client PRIVATE ${CLIENT_DEPENDENCIES})
-target_link_libraries(client asio openssl zlib)
+target_link_libraries(client asio openssl zlib angelscript)
 install(TARGETS client DESTINATION bin)

@@ -26,6 +26,7 @@
 #include "../Networking\ByteBuffer.h"
 #include "../Utils/DebugHandler.h"
 #include "../Cryptography/SHA1.h"
+#include "../Scripting/PacketHooks.h"
 
 robin_hood::unordered_map<u8, NovusMessageHandler> NovusConnection::InitMessageHandlers()
 {
@@ -111,6 +112,8 @@ void NovusConnection::HandleRead()
                 sAuthLogonChallengeHeader challengeHeader;
                 challengeHeader.Read(byteBuffer);
 
+				PacketHooks::CallHook(PacketHooks::HOOK_ONLOGIN_CHALLENGE, challengeHeader.result, 32);
+
                 NC_LOG_ERROR("Login Failed: (%u, %u, %u)", (u32)challengeHeader.command, (u32)challengeHeader.error, (u32)challengeHeader.result);
 
                 Close(asio::error::shut_down);
@@ -156,6 +159,8 @@ bool NovusConnection::HandleCommandChallenge()
     _status = NOVUSSTATUS_PROOF;
     sAuthLogonChallengeData* logonChallenge = reinterpret_cast<sAuthLogonChallengeData*>(GetByteBuffer().GetReadPointer());
     
+	PacketHooks::CallHook(PacketHooks::HOOK_ONLOGIN_CHALLENGE, logonChallenge->result, 32);
+
     BigNumber N, A, B, a, u, x, S, salt, version_challenge, g(logonChallenge->g), k(3);
     B.Bin2BN(logonChallenge->b, 32);
     N.Bin2BN(logonChallenge->n, 32);

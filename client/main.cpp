@@ -26,21 +26,19 @@ i32 main()
         std::getchar();
         return 0;
     }
-    std::string username = "ADMIN";
-    std::string password = "ADMIN";
 
     ClientHandler clientHandler(ConfigHandler::GetOption<f32>("tickRate", 30));
-    clientHandler.Start();
 
-    asio::io_service io_service(2);
-    NovusConnection novusConnection(new asio::ip::tcp::socket(io_service), ConfigHandler::GetOption<std::string>("address", "127.0.0.1"), ConfigHandler::GetOption<u16>("port", 3724));
-    novusConnection.Start(username, password);
+	asio::io_service io_service(2);
 
     srand((u32)time(NULL));
     std::thread run_thread([&]
     {
         io_service.run();
     });    
+
+	clientHandler.SetIOService(&io_service);
+	clientHandler.Start();
 
     NC_LOG_MESSAGE("Client established connection to Authserver.");
 

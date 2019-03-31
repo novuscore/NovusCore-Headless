@@ -25,13 +25,15 @@
 #include "NovusTypes.h"
 #include "Message.h"
 #include "Utils/ConcurrentQueue.h"
+#include <asio.hpp>
 
 enum InputMessages
 {
 	MSG_IN_EXIT,
 	MSG_IN_PING,
     MSG_IN_SET_CONNECTION,
-    MSG_IN_FOWARD_PACKET
+    MSG_IN_FOWARD_PACKET,
+	MSG_IN_RELOAD_SCRIPTS
 };
 
 enum OutputMessages
@@ -64,6 +66,8 @@ public:
         printMessage.message = new std::string(str);
         _outputQueue.enqueue(printMessage);
     }
+
+	void SetIOService(asio::io_service* service) { _ioService = service; }
 private:
 	void Run();
 	bool Update();
@@ -74,4 +78,5 @@ private:
 
 	moodycamel::ConcurrentQueue<Message> _inputQueue;
 	moodycamel::ConcurrentQueue<Message> _outputQueue;
+	asio::io_service* _ioService;
 };
